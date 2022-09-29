@@ -6,8 +6,19 @@ services:
       context: ./Service1
     ports:
       - "8001:12345"
+    networks:
+      - backend
+      - frontend
 
   service2:
     build:
       dockerfile: Dockerfile
       context: ./Service2
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+  
