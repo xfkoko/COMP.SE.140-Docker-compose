@@ -1,0 +1,13 @@
+version: "1"
+services:
+  service1:
+    build:
+      dockerfile: Dockerfile
+      context: ./Service1
+    ports:
+      - "8001:12345"
+
+  service2:
+    build:
+      dockerfile: Dockerfile
+      context: ./Service2
