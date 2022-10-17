@@ -1,6 +1,9 @@
 # COMP.SE.140
 Repository for the COMP.SE.140 course's Ansible exercise.
 
+## document.pdf
+Has the answers to presented questions and outputs
+
 ## Folders
 ### nodes
 Contains the Dockerfile to boot up the nodes.
