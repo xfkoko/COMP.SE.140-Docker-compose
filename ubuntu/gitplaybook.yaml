@@ -1,0 +1,16 @@
+---
+- hosts: webservers
+  tasks:
+          - name: Install git
+            become: yes
+            apt:
+                    name: git
+                    state: present
+                    update_cache: yes
+          - name: Query uptime
+            shell:
+                    "uptime"
+            register: os_info
+
+          - debug:
+                  msg: "{{os_info.stdout_lines}}"
