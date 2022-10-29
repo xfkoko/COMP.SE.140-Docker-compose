@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  httpserv:
+    build:
+      dockerfile: Dockerfile
+      context: ./httpserv
+    ports:
+      - "8080:8080"
+    volumes:
+      - shared-volume:/filefolder
+
+  rapid-runner-rabbit:
+      container_name: "rapid-runner-rabbit"
+      image: rabbitmq:3.8-management-alpine
+      ports:
+        - 5672:5672
+        - 15672:15672
+      networks:
+        - rabbit
+
+  obse:
+    restart: on-failure
+    depends_on:
+      - rapid-runner-rabbit
+    links: 
+      - rapid-runner-rabbit
+    build:
+      dockerfile: Dockerfile
+      context: ./obse
+    volumes:
+      - shared-volume:/filefolder
+    networks:
+      - rabbit
+
+  orig:
+    restart: on-failure
+    depends_on:
+      - rapid-runner-rabbit
+    links: 
+      - rapid-runner-rabbit
+    build:
+      dockerfile: Dockerfile
+      context: ./orig
+    networks:
+      - rabbit
+
+  imed:
+    restart: on-failure
+    depends_on:
+      - rapid-runner-rabbit
+    links: 
+      - rapid-runner-rabbit
+    build:
+      dockerfile: Dockerfile
+      context: ./imed
+    networks:
+      - rabbit
+
+networks:
+ rabbit:
+  driver: bridge
+
+volumes:
+  shared-volume:
