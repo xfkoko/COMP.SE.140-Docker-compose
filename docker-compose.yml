@@ -13,9 +13,6 @@ services:
   rapid-runner-rabbit:
       container_name: "rapid-runner-rabbit"
       image: rabbitmq:3.8-management-alpine
-      ports:
-        - 5672:5672
-        - 15672:15672
       networks:
         - rabbit
 
@@ -33,18 +30,6 @@ services:
     networks:
       - rabbit
 
-  orig:
-    restart: on-failure
-    depends_on:
-      - rapid-runner-rabbit
-    links: 
-      - rapid-runner-rabbit
-    build:
-      dockerfile: Dockerfile
-      context: ./orig
-    networks:
-      - rabbit
-
   imed:
     restart: on-failure
     depends_on:
@@ -54,6 +39,18 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./imed
+    networks:
+      - rabbit
+  
+  orig:
+    restart: on-failure
+    depends_on:
+      - rapid-runner-rabbit
+    links: 
+      - rapid-runner-rabbit
+    build:
+      dockerfile: Dockerfile
+      context: ./orig
     networks:
       - rabbit
 

@@ -13,7 +13,7 @@ amqp.connect('amqp://rapid-runner-rabbit:5672', function(error0, connection) {
         var exchange = 'topic_logs';
         var key = 'compose140.o';
         var msg = 'MSG_1';
-        await sleep(1000)
+        await sleep(3000)
         channel.assertExchange(exchange, 'topic', {
             durable: false
         });
