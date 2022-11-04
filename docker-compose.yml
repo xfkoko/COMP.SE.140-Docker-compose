@@ -12,7 +12,7 @@ services:
 
   rapid-runner-rabbit:
       container_name: "rapid-runner-rabbit"
-      image: rabbitmq:3.8-management-alpine
+      image: rabbitmq:3.11.2-alpine
       networks:
         - rabbit
 
@@ -34,6 +34,7 @@ services:
     restart: on-failure
     depends_on:
       - rapid-runner-rabbit
+      - obse
     links: 
       - rapid-runner-rabbit
     build:
@@ -46,6 +47,8 @@ services:
     restart: on-failure
     depends_on:
       - rapid-runner-rabbit
+      - obse
+      - imed
     links: 
       - rapid-runner-rabbit
     build:
