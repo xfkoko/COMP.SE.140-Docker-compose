@@ -1,4 +1,4 @@
-version: "3"
+version: "2.1"
 
 services:
   httpserv:
@@ -12,54 +12,56 @@ services:
 
   rapid-runner-rabbit:
       container_name: "rapid-runner-rabbit"
-      image: rabbitmq:3.11.2-alpine
-      networks:
-        - rabbit
-
+      build:
+        dockerfile: Dockerfile
+        context: .
+      #ports:
+      # - 15672:15672
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://0.0.0.0:15672"]
+        interval: 5s
+        timeout: 3s
+        retries: 20
   obse:
     restart: on-failure
     depends_on:
-      - rapid-runner-rabbit
-    links: 
+      rapid-runner-rabbit:
+        condition: service_healthy
+    links:
       - rapid-runner-rabbit
     build:
       dockerfile: Dockerfile
       context: ./obse
     volumes:
       - shared-volume:/filefolder
-    networks:
-      - rabbit
 
   imed:
     restart: on-failure
     depends_on:
-      - rapid-runner-rabbit
-      - obse
-    links: 
+      obse:
+        condition: service_started
+      rapid-runner-rabbit:
+        condition: service_healthy
+    links:
       - rapid-runner-rabbit
     build:
       dockerfile: Dockerfile
       context: ./imed
-    networks:
-      - rabbit
   
   orig:
-    restart: on-failure
-    depends_on:
-      - rapid-runner-rabbit
-      - obse
-      - imed
-    links: 
-      - rapid-runner-rabbit
     build:
       dockerfile: Dockerfile
       context: ./orig
-    networks:
-      - rabbit
-
-networks:
- rabbit:
-  driver: bridge
+    restart: on-failure
+    depends_on:
+      obse:
+        condition: service_started
+      imed:
+        condition: service_started
+      rapid-runner-rabbit:
+        condition: service_healthy
+    links:
+      - rapid-runner-rabbit
 
 volumes:
   shared-volume:

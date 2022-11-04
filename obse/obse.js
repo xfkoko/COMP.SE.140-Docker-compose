@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+console.log("Started")
+
 var amqp = require('amqplib/callback_api');
 var fs = require('fs')
 var args = process.argv.slice(2);
